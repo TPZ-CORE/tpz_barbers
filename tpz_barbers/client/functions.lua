@@ -1,6 +1,6 @@
 
-local StoreLocationPrompts, StorePrompts = GetRandomIntInRange(0, 0xffffff), GetRandomIntInRange(0, 0xffffff)
-local StoreLocationPromptsList, StorePromptsList = {}, {}
+local StoreLocationPrompts = GetRandomIntInRange(0, 0xffffff)
+local StoreLocationPromptsList = {}
 
 --[[-------------------------------------------------------
  Handlers
@@ -54,43 +54,10 @@ RegisterStoreLocationPrompts = function()
 
 end
 
-function GetStoreLocationPromptData()
+function GetPromptData()
     return StoreLocationPrompts, StoreLocationPromptsList
 end
 
-CreateStorePrompts = function()
-
-    for index, tprompt in pairs (Config.CameraAdjustmentPrompts) do
-
-        local str = tprompt.label
-        local keyPress  = Config.Keys[tprompt.key1]
-        local keyPress2 = Config.Keys[tprompt.key2]
-
-        local dPrompt = PromptRegisterBegin()
-        PromptSetControlAction(dPrompt, keyPress)
-
-        if keyPress2 then
-            PromptSetControlAction(dPrompt, keyPress2)
-        end
-        
-        str = CreateVarString(10, 'LITERAL_STRING', str)
-        PromptSetText(dPrompt, str)
-        PromptSetEnabled(dPrompt, 1)
-        PromptSetVisible(dPrompt, 1)
-        PromptSetStandardMode(dPrompt, 0)
-        PromptSetHoldMode(dPrompt, false)
-        PromptSetGroup(dPrompt, StorePrompts)
-        Citizen.InvokeNative(0xC5F428EE08FA7F2C, dPrompt, true)
-        PromptRegisterEnd(dPrompt)
-    
-        table.insert(StorePromptsList, {prompt = dPrompt, type = index})
-    end
-
-end
-
-function GetStorePromptData()
-    return StorePrompts, StorePromptsList
-end
 
 --[[-------------------------------------------------------
  Blips Management
@@ -273,5 +240,4 @@ function ApplyOverlay(name, visibility, tx_id, tx_normal, tx_material, tx_color_
     Citizen.InvokeNative(0x92DAABA2C1C10B0E, textureId)
     Citizen.InvokeNative(0x0B46E25761519058, ped, joaat("heads"), textureId)
     Citizen.InvokeNative(0xCC8CA3E88256E58F, ped, false, true, true, true, false)
-
 end

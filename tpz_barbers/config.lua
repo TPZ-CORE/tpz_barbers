@@ -17,12 +17,6 @@ Config.Prompts = {
     ['OPEN_STORE']  = {label = 'Press',  key = 'G' },
 }
 
-Config.CameraAdjustmentPrompts = {
-    ['CHARACTER_ADJUSTMENT_LEFT_AND_RIGHT']       = {label = "LEFT & RIGHT ROTATIONS",                key1 = 'A', key2 = 'D'},
-    ['CHARACTER_ADJUSTMENT_ZOOM_IN_AND_ZOOM_OUT'] = {label = "ZOOM IN & ZOOM OUT CAMERA ADJUSTMENTS", key1 = 'CursorScrollUp', key2 = 'CursorScrollDown'},
-}
-
-
 -----------------------------------------------------------
 --[[ General Settings  ]]--
 -----------------------------------------------------------
@@ -66,6 +60,8 @@ Config.Stores = {
             RGBA = {r = 255, g = 255, b = 255, a = 155},
         },
 
+        Lighting = vector3(-307.39, 813.43, 119.51),
+
 		ActionDistance = 1.5,
 	},
 	
@@ -93,7 +89,9 @@ Config.Stores = {
             Distance = 10.0,
             RGBA = {r = 255, g = 255, b = 255, a = 155},
         },
-		
+
+        Lighting = vector3(-816.46, -1368.77, 44.26),
+
 		ActionDistance = 1.2,
 	},
 
@@ -120,6 +118,8 @@ Config.Stores = {
             Distance = 10.0,
             RGBA = {r = 255, g = 255, b = 255, a = 155},
         },
+
+        Lighting = vector3(2655.35, -1182.23, 54.07),
 
 		ActionDistance = 1.5,
 	},

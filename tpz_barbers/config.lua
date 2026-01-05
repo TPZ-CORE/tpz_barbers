@@ -56,13 +56,13 @@ Config.Stores = {
         ActionMarkers = {
             Enabled = true,
 
-            Distance = 10.0,
-            RGBA = {r = 255, g = 255, b = 255, a = 155},
+            Distance = 5.0,
+            RGBA = {r = 255, g = 255, b = 255, a = 100},
         },
 
         Lighting = vector3(-307.39, 813.43, 119.51),
 
-		ActionDistance = 1.5,
+		ActionDistance = 1.7,
 	},
 	
 	['BLACKWATER'] = {
@@ -86,8 +86,8 @@ Config.Stores = {
         ActionMarkers = {
             Enabled = true,
 
-            Distance = 10.0,
-            RGBA = {r = 255, g = 255, b = 255, a = 155},
+            Distance = 5.0,
+            RGBA = {r = 255, g = 255, b = 255, a = 100},
         },
 
         Lighting = vector3(-816.46, -1368.77, 44.26),
@@ -115,8 +115,8 @@ Config.Stores = {
         ActionMarkers = {
             Enabled = true,
 
-            Distance = 10.0,
-            RGBA = {r = 255, g = 255, b = 255, a = 155},
+            Distance = 5.0,
+            RGBA = {r = 255, g = 255, b = 255, a = 100},
         },
 
         Lighting = vector3(2655.35, -1182.23, 54.07),

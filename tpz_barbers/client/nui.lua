@@ -24,7 +24,6 @@ local ToggleUI = function(display, data)
             DoScreenFadeOut(2000)
         end
 
-        FreezeEntityPosition(PlayerPedId(), false)
         DestroyAllCams(true)
 
         SetNuiFocus(display, display)
@@ -32,7 +31,8 @@ local ToggleUI = function(display, data)
         SendNUIMessage({ type = "enable", enable = display })
 
         PlayerData.HasNUIActive = false
-    
+        
+        FreezeEntityPosition(PlayerPedId(), false)
         ClearPedTasksImmediately(PlayerPedId(), true)
         local coords = COORDS_TO_TELEPORT_OUT
         TPZ.TeleportToCoords(coords.x, coords.y, coords.z, coords.h)

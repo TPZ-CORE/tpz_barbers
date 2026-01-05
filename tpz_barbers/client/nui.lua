@@ -201,6 +201,7 @@ function OpenCharacterCustomization(locationIndex)
 
             if not PlayerData.HasNUIActive then 
                 FreezeEntityPosition(PlayerPedId(), false)
+                break
             end
 
             DisplayRadar(false)

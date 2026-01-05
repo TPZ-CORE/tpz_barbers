@@ -29,7 +29,7 @@ Locales = {
     ['NUI_GROOM_BEARD_OPACITY']         = "Opacity",
 
     ['NUI_GROOM_BEARDSTABBLE']          = "Beard Stabble",
-    ['NUI_GROOM_BEARDSTABBLE_INFO']     = "Beard Stabble",
+    ['NUI_GROOM_BEARDSTABBLE_INFO']     = "A precise trim that evens the beard into clean stubble, with light shaping on the neckline and cheeks for a sharp, natural look.",
     ['NUI_GROOM_BEARDSTABBLE_DESC']     = "Beard Stabble",
     ['NUI_GROOM_BEARDSTABBLE_COLORS']   = "Component Colors",
     ['NUI_GROOM_BEARDSTABBLE_OPACITY']  = "Opacity",

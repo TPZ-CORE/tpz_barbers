@@ -12,7 +12,6 @@ AddEventHandler("onResourceStop", function(resourceName)
     end
 
     Citizen.InvokeNative(0x00EDE88D4D13CF59, StoreLocationPrompts) -- UiPromptDelete
-    Citizen.InvokeNative(0x00EDE88D4D13CF59, StorePrompts) -- UiPromptDelete
 
     local PlayerData = GetPlayerData()
 
@@ -241,3 +240,4 @@ function ApplyOverlay(name, visibility, tx_id, tx_normal, tx_material, tx_color_
     Citizen.InvokeNative(0x0B46E25761519058, ped, joaat("heads"), textureId)
     Citizen.InvokeNative(0xCC8CA3E88256E58F, ped, false, true, true, true, false)
 end
+

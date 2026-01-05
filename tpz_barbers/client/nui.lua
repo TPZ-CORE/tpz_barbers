@@ -25,7 +25,6 @@ local ToggleUI = function(display, data)
         end
 
         FreezeEntityPosition(PlayerPedId(), false)
-
         DestroyAllCams(true)
 
         SetNuiFocus(display, display)
@@ -200,6 +199,9 @@ function OpenCharacterCustomization(locationIndex)
         while PlayerData.HasNUIActive do 
             Wait(0)
             DisplayRadar(false)
+            
+            FreezeEntityPosition(PlayerPedId(), true)
+            DrawLightWithRange(LocationData.Lighting, 255, 255, 255, 2.5, 50.0)
         end
     
     end)

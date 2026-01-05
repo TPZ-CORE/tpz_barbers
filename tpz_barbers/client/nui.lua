@@ -31,7 +31,7 @@ local ToggleUI = function(display, data)
         SendNUIMessage({ type = "enable", enable = display })
 
         PlayerData.HasNUIActive = false
-        
+
         FreezeEntityPosition(PlayerPedId(), false)
         ClearPedTasksImmediately(PlayerPedId(), true)
         local coords = COORDS_TO_TELEPORT_OUT
@@ -196,8 +196,13 @@ function OpenCharacterCustomization(locationIndex)
 
     Citizen.CreateThread(function()
         
-        while PlayerData.HasNUIActive do 
+        while true do 
             Wait(0)
+
+            if not PlayerData.HasNUIActive then 
+                FreezeEntityPosition(PlayerPedId(), false)
+            end
+
             DisplayRadar(false)
             
             FreezeEntityPosition(PlayerPedId(), true)

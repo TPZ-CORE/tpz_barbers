@@ -18,6 +18,7 @@ AddEventHandler("onResourceStop", function(resourceName)
 
     if PlayerData.IsBusy then
         DestroyAllCams(true)
+        FreezeEntityPosition(PlayerPedId(), false)
     end
 
     for i, v in pairs(Config.Stores) do
@@ -272,4 +273,5 @@ function ApplyOverlay(name, visibility, tx_id, tx_normal, tx_material, tx_color_
     Citizen.InvokeNative(0x92DAABA2C1C10B0E, textureId)
     Citizen.InvokeNative(0x0B46E25761519058, ped, joaat("heads"), textureId)
     Citizen.InvokeNative(0xCC8CA3E88256E58F, ped, false, true, true, true, false)
+
 end

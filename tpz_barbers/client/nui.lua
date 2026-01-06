@@ -1,6 +1,6 @@
 local TPZ = exports.tpz_core:getCoreAPI()
 
-local CameraHandler   = {coords = nil, zoom = 0, z = 0 }
+local CameraHandler   = {handler = nil, coords = nil, zoom = 0, z = 0 }
 local COORDS_TO_TELEPORT_OUT  = nil
 local SELECTED_CATEGORY_TYPE = nil
 
@@ -8,7 +8,7 @@ local DefaultPlayerSkin  = {} -- The skin (hair, beard, beardstabble) when enter
 local SelectedPlayerSkin = {} -- The selected skin (hair, beard, beardstabble)
 local Groom              = nil
 
-
+function GetCameraHandler() return CameraHandler end
 -----------------------------------------------------------
 --[[ Local Functions ]]--
 -----------------------------------------------------------
@@ -23,8 +23,11 @@ local ToggleUI = function(display, data)
             Wait(50)
             DoScreenFadeOut(2000)
         end
-
-        DestroyAllCams(true)
+		
+        RenderScriptCams(false, true, 500, true, true)
+        SetCamActive(CameraHandler.handler, false)
+        DetachCam(CameraHandler.handler)
+        DestroyCam(CameraHandler.handler, true)
 
         SetNuiFocus(display, display)
 
@@ -207,10 +210,12 @@ function OpenCharacterCustomization(locationIndex)
     Citizen.InvokeNative(0xCC8CA3E88256E58F, PlayerPedId(), 0, 1, 1, 1, 0)
 
     local cameraCoords = LocationData.CameraCoords
-    StartCam(cameraCoords.x, cameraCoords.y, cameraCoords.z, cameraCoords.rotx, cameraCoords.roty, cameraCoords.rotz, cameraCoords.zoom)
+    local handler = StartCam(cameraCoords.x, cameraCoords.y, cameraCoords.z, cameraCoords.rotx, cameraCoords.roty, cameraCoords.rotz, cameraCoords.zoom)
+  
     CameraHandler.coords = { x = cameraCoords.x, y = cameraCoords.y, z = cameraCoords.z, rotx = cameraCoords.rotx, roty = cameraCoords.roty, rotz = cameraCoords.rotz, fov = cameraCoords.fov }
     CameraHandler.z    = cameraCoords.z
     CameraHandler.zoom = cameraCoords.zoom 
+    CameraHandler.handler = handler
 
     PlayerData.HasNUIActive = true
 
@@ -511,3 +516,4 @@ RegisterNUICallback('back', function()
     end) 
 
 end)
+

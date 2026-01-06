@@ -38,7 +38,6 @@ Locales = {
     ['SUCCESSFULLY_PAID']               = "You have paid %s dollars for this change.",
     ['NOT_ENOUGH_MONEY']                = "You don't have enough money.",
 
-
     ['HAIR']                            = "Hair Style",
     ['BEARD']                           = "Beard Style",
     ['BEARDSTABBLE']                    = "Beard Shaving",

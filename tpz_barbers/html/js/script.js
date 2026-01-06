@@ -31,6 +31,7 @@ $(function() {
 
       $("#main-title").text(item.title);
       $("#main-hair-button").text(item.locales['NUI_HAIR_BUTTON']);
+      $("#main-hairoverlay-button").text(item.locales['NUI_GROOM_OVERLAY']);
       $("#main-beard-button").text(item.locales['NUI_BEARD_BUTTON']);
       $("#main-beardstabble-button").text(item.locales['NUI_BEARDSTABBLE_BUTTON']);
       $("#main-close-button").text(item.locales['NUI_CLOSE']);
@@ -43,11 +44,13 @@ $(function() {
       if (item.ismale == 0){
         $("#main-beard-button").hide();
         $("#main-beardstabble-button").hide();
+        $("#main-hairoverlay-button").show();
         $('#main-close-button').css('margin-top', '32%');
 
       }else {
         $("#main-beard-button").show();
         $("#main-beardstabble-button").show();
+        $("#main-hairoverlay-button").hide();
         $('#main-close-button').css('margin-top', '35.5%');
       }
 
@@ -152,6 +155,17 @@ $(function() {
     $.post('http://tpz_barbers/request_selected_groom_data', JSON.stringify({
       category: 'hair',
       title: 'hair',
+    }));
+
+    $(".main-section").fadeOut();
+
+  });
+
+  $("#main").on("click", "#main-hairoverlay-button", function () {
+    PlayButtonClickSound();
+    $.post('http://tpz_barbers/request_selected_groom_data', JSON.stringify({
+      category: 'overlay',
+      title: 'overlay',
     }));
 
     $(".main-section").fadeOut();

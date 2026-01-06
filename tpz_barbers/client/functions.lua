@@ -16,7 +16,14 @@ AddEventHandler("onResourceStop", function(resourceName)
     local PlayerData = GetPlayerData()
 
     if PlayerData.IsBusy then
-        DestroyAllCams(true)
+			
+        local CameraHandler = GetCameraHandler()
+
+        RenderScriptCams(false, true, 500, true, true)
+        SetCamActive(CameraHandler.handler, false)
+        DetachCam(CameraHandler.handler)
+        DestroyCam(CameraHandler.handler, true)
+			
         FreezeEntityPosition(PlayerPedId(), false)
     end
 
@@ -124,13 +131,8 @@ end
 
 StartCam = function(x, y, z, rotx, roty, rotz, fov)
 
-	Citizen.InvokeNative(0x17E0198B3882C2CB, PlayerPedId())
-	DestroyAllCams(true)
-
     local cameraHandler = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", x, y, z, rotx, roty, rotz, fov, true, 0)
-    
 	SetCamActive(cameraHandler, true)
-
 	RenderScriptCams(true, true, 500, true, true)
 
 end
@@ -240,5 +242,6 @@ function ApplyOverlay(name, visibility, tx_id, tx_normal, tx_material, tx_color_
     Citizen.InvokeNative(0x0B46E25761519058, ped, joaat("heads"), textureId)
     Citizen.InvokeNative(0xCC8CA3E88256E58F, ped, false, true, true, true, false)
 end
+
 
 

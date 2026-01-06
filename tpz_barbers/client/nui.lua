@@ -122,7 +122,7 @@ local function SetGroomTexture(data)
         end
     
         local newOpacity = math.type(opacity) == "integer" and (opacity > 0 and opacity / 10 or 0.0) or opacity 
-       
+
         SelectedPlayerSkin[_category] = { 
             id         = texture_id, 
             color      = color, 
@@ -139,7 +139,7 @@ local function SetGroomTexture(data)
     
             SendNUIMessage({
                 action = 'updateGroomSpecificData',
-                max_colors = #Config.color_palettes[category],
+                max_colors = (category == 'eyebrows' or _category == 'hair_overlay' ) and 63 or #Config.color_palettes[category],
                 category   = SELECTED_CATEGORY_TYPE,
             })
     
@@ -147,16 +147,36 @@ local function SetGroomTexture(data)
     
         if SelectedPlayerSkin[_category] and PlayerSkin[_category] then
 
-            -- We remove selected player skin in case its the same as the default one when opened the store.
-            if tonumber(SelectedPlayerSkin[_category].id) == tonumber(PlayerSkin[_category].id) and tonumber(SelectedPlayerSkin[_category].color) == tonumber(PlayerSkin[_category].color) then
-               
-                if tonumber(SelectedPlayerSkin[_category].visibility) == tonumber(PlayerSkin[_category].visibility) and tonumber(SelectedPlayerSkin[_category].opacity) == tonumber(PlayerSkin[_category].opacity) then
-                    SelectedPlayerSkin[_category] = nil
+            if _category ~= 'hair_overlay' then
+
+                -- We remove selected player skin in case its the same as the default one when opened the store.
+                if tonumber(SelectedPlayerSkin[_category].id) == tonumber(PlayerSkin[_category].id) and tonumber(SelectedPlayerSkin[_category].color) == tonumber(PlayerSkin[_category].color) then
+                   
+                    if tonumber(SelectedPlayerSkin[_category].visibility) == tonumber(PlayerSkin[_category].visibility) and tonumber(SelectedPlayerSkin[_category].opacity) == tonumber(PlayerSkin[_category].opacity) then
+                        SelectedPlayerSkin[_category] = nil
+                    end
+            
                 end
-        
+
+            else
+
+                if tonumber(SelectedPlayerSkin[_category].id) == tonumber(PlayerSkin[_category].id) and tonumber(SelectedPlayerSkin[_category].color) == tonumber(PlayerSkin[_category].color) then
+                    SelectedPlayerSkin[_category] = nil
+
+                end
+
             end
 
         end
+
+        if _category == 'hair_overlay' then 
+            ApplyOverlay('eyebrows', PlayerSkin.eyebrows.visibility,
+            PlayerSkin.eyebrows.id, 1, 0, 0, 1.0, 0, 1, 
+            PlayerSkin.eyebrows.color, 0, 0, 1,
+            PlayerSkin.eyebrows.opacity, PlayerSkin.albedo)
+
+        end
+
     
     end
 
@@ -208,6 +228,7 @@ function OpenCharacterCustomization(locationIndex)
             
             FreezeEntityPosition(PlayerPedId(), true)
             DrawLightWithRange(LocationData.Lighting, 255, 255, 255, 2.5, 50.0)
+
         end
     
     end)
@@ -315,7 +336,7 @@ RegisterNUICallback('request_selected_groom_data', function(data)
 		local current_opacity   = PlayerSkin[_category] and PlayerSkin[_category].opacity or 10
 
 		local max_texture_id    = #Config.overlays_info[category]
-		local max_colors        = #Config.color_palettes[category]
+		local max_colors        = (category == 'eyebrows' or _category == 'hair_overlay') and 63 or #Config.color_palettes[category]
 
 		-- texture_id
 		SendNUIMessage({
@@ -384,7 +405,9 @@ RegisterNUICallback('set_groom_textures', function(data)
 end)
 
 RegisterNUICallback('back', function()
-    
+
+    SELECTED_CATEGORY_TYPE = SELECTED_CATEGORY_TYPE == 'overlay' and 'hair_overlay' or SELECTED_CATEGORY_TYPE
+
     local cost = SelectedPlayerSkin[SELECTED_CATEGORY_TYPE] == nil and 0 or Config.Prices[string.upper(SELECTED_CATEGORY_TYPE)]
 
     if cost == 0 then 
@@ -416,6 +439,11 @@ RegisterNUICallback('back', function()
                 reset = false 
 
                 DefaultPlayerSkin[SELECTED_CATEGORY_TYPE] = SelectedPlayerSkin[SELECTED_CATEGORY_TYPE]
+
+                if SELECTED_CATEGORY_TYPE == 'hair_overlay' then 
+                    DefaultPlayerSkin['overlay'] = SelectedPlayerSkin['hair_overlay']
+                end
+
             end
 
             await = false
@@ -429,13 +457,54 @@ RegisterNUICallback('back', function()
 
         if reset then
 
-            SetGroomTexture({ 
-                actionType = SELECTED_CATEGORY_TYPE,
-                texture_id = DefaultPlayerSkin[SELECTED_CATEGORY_TYPE].id,
-                color      = DefaultPlayerSkin[SELECTED_CATEGORY_TYPE].color,
-                opacity    = DefaultPlayerSkin[SELECTED_CATEGORY_TYPE].opacity or 1.0,
-                visibility = DefaultPlayerSkin[SELECTED_CATEGORY_TYPE].visibility or 0,
-            })   
+            local ClientData = exports.tpz_core:getCoreAPI().GetPlayerClientData()
+            local PlayerSkin = ClientData.skinComp
+            
+            PlayerSkin = json.decode(PlayerSkin)
+
+            -- Required for females or males who dont have any hair skin and used the default one.
+            if PlayerSkin[SELECTED_CATEGORY_TYPE] == nil then 
+
+                local id, opacity, visibility = 1, 1.0, 1
+
+                if SELECTED_CATEGORY_TYPE ~= 'hair' then 
+                    id, opacity, visibility = 0, 0.0, 0
+                end
+
+                PlayerSkin[SELECTED_CATEGORY_TYPE] = {
+                    id = id,
+                    color = 1,
+                    opacity = opacity,
+                    visibility = visibility,
+                    type = SELECTED_CATEGORY_TYPE,
+                }
+
+            end
+
+            if SELECTED_CATEGORY_TYPE ~= 'hair_overlay' then 
+
+                SetGroomTexture({ 
+                    actionType = SELECTED_CATEGORY_TYPE,
+                    texture_id = PlayerSkin[SELECTED_CATEGORY_TYPE].id,
+                    color      = PlayerSkin[SELECTED_CATEGORY_TYPE].color,
+                    opacity    = PlayerSkin[SELECTED_CATEGORY_TYPE].opacity or 1.0,
+                    visibility = PlayerSkin[SELECTED_CATEGORY_TYPE].visibility or 0,
+                    type       = SELECTED_CATEGORY_TYPE,
+                })   
+
+            else
+
+                SELECTED_CATEGORY_TYPE = 'overlay'
+
+                SetGroomTexture({ 
+                    actionType = 'overlay',
+                    texture_id = PlayerSkin['hair_overlay'].id,
+                    color      = PlayerSkin['hair_overlay'].color,
+                    opacity    = PlayerSkin['hair_overlay'].opacity or 1.0,
+                    visibility = PlayerSkin['hair_overlay'].visibility or 0,
+                    type       = 'overlay',
+                })   
+            end
     
         end
 

@@ -101,7 +101,7 @@ Citizen.CreateThread(function()
                 if distance <= locationConfig.ActionDistance then
                     sleep = 0
     
-                    local Prompts, PromptList = GetStoreLocationPromptData()
+                    local Prompts, PromptList = GetPromptData()
     
                     local label = CreateVarString(10, 'LITERAL_STRING', Locales['TITLE'])
                     PromptSetActiveGroupThisFrame(Prompts, label)
@@ -239,4 +239,5 @@ CreateThread(function()
         ::END::
         Wait(sleep)
     end
+
 end)

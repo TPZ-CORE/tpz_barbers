@@ -16,14 +16,13 @@ AddEventHandler("onResourceStop", function(resourceName)
     local PlayerData = GetPlayerData()
 
     if PlayerData.IsBusy then
-			
         local CameraHandler = GetCameraHandler()
 
         RenderScriptCams(false, true, 500, true, true)
         SetCamActive(CameraHandler.handler, false)
         DetachCam(CameraHandler.handler)
         DestroyCam(CameraHandler.handler, true)
-			
+
         FreezeEntityPosition(PlayerPedId(), false)
     end
 
@@ -243,5 +242,156 @@ function ApplyOverlay(name, visibility, tx_id, tx_normal, tx_material, tx_color_
     Citizen.InvokeNative(0xCC8CA3E88256E58F, ped, false, true, true, true, false)
 end
 
+ReLoadAllRequired = function(reloadLifestyle, disableEyebrowsReload, disabledElement)
 
+    local ClientData = exports.tpz_core:getCoreAPI().GetPlayerClientData()
+    local skinComp = ClientData.skinComp
 
+    skinComp = json.decode(skinComp)
+
+    local ped = PlayerPedId()
+
+    if reloadLifestyle then 
+
+        local lifestyle_elements = {
+            "moles",
+            "spots",
+            "complex",
+            "acne",
+            "freckles",
+            "disc",
+            "scars",
+            "grime",
+        }
+    
+        for _, element in pairs (lifestyle_elements) do 
+    
+
+            if element ~= disabledElement then
+
+                if skinComp[element] then
+    
+                    local data = skinComp[element]
+        
+                    local color     = element == "grime" and 1 or 0
+                    local colortype = element == "grime" and 0 or 1
+        
+                    ApplyOverlay(string.lower(element), data.visibility, 
+                    data.id, 0, 0, 
+                    colortype, 1.0, 0, color, 0, 0, 0, 1, 
+                    data.opacity, skinComp.albedo, ped)
+        
+                end
+
+            end
+    
+        end
+
+    end
+
+    -- Load Makeup
+    local makeup_elements = {
+        'foundation',
+        'lipsticks',
+        'shadows',
+        'eyeliners',
+        'blush',
+    }
+
+    for _, element in pairs (makeup_elements) do 
+
+        if element ~= disabledElement then
+
+            if skinComp[element] then
+                local data = skinComp[element]
+    
+                ApplyOverlay(element, data.visibility,
+                data.id, 1, 0, 0,
+                1.0, 0, 1, data.primary_color, data.secondary_color or 0,
+                data.tertiary_color or 0, data.variant or 1,
+                data.opacity, skinComp.albedo, ped)
+            else
+                ApplyOverlay(element, 0,
+                0, 1, 0, 0,
+                1.0, 0, 1,  0, 0,
+                0, 0,
+                0.0, 0, ped)
+    
+            end
+            
+        end
+
+    end
+
+    if not disableEyebrowsReload then
+        local groom_elements = {
+            'eyebrows',
+        }
+    
+        for _, element in pairs (groom_elements) do 
+    
+            if element ~= disabledElement then
+                if skinComp[element] ~= nil then
+    
+                    local data = skinComp[element]
+        
+                    if element == 'hair' or element == 'bow' or element == 'beard' then
+        
+                        modules.IsPedReadyToRender(ped)
+        
+                        if data.id > 0 then 
+        
+                            local hash = groom[element][data.id][data.color].hex
+                
+                            modules.ApplyShopItemToPed(hash, ped)
+                        end
+                
+                        modules.UpdatePedVariation(ped)
+        
+                    else
+        
+                        if element == 'overlay' or element == 'hair_overlay' then 
+                            element = 'hair'
+                        end
+        
+                        ApplyOverlay(element, data.visibility,
+                        data.id, 1, 0, 0, 1.0, 0, 1, 
+                        data.color, 0, 0, 1,
+                        data.opacity, skinComp.albedo, ped)
+                    end
+        
+                else
+        
+                    if element == 'hair' then
+        
+                        modules.IsPedReadyToRender(ped)
+        
+                        local hash = groom['hair'][1][1].hex
+                
+                        modules.ApplyShopItemToPed(hash, ped)
+                
+                        modules.UpdatePedVariation(ped)
+        
+                    elseif element == 'hair_overlay' then
+        
+                        if element == 'overlay' or element == 'hair_overlay' then 
+                            element = 'hair'
+                        end
+        
+                        ApplyOverlay(element, 0, 1, 1, 0, 0, 1.0, 0, 1, 0, 0, 0, 1, 0.0, skinComp['albedo'], ped)
+                    end
+        
+                    if element == 'beardstabble' then 
+                        ApplyOverlay('beardstabble', 0, 1, 1, 0, 0, 1.0, 0, 1, 0, 0, 0, 1, 0.0, skinComp['albedo'], ped)
+                    end
+        
+                end
+
+            end
+    
+    
+        end
+
+    end
+
+end

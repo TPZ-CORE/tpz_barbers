@@ -1,6 +1,6 @@
 local TPZ = exports.tpz_core:getCoreAPI()
 
-local CameraHandler   = {handler = nil, coords = nil, zoom = 0, z = 0 }
+local CameraHandler   = { handler = nil, coords = nil, zoom = 0, z = 0 }
 local COORDS_TO_TELEPORT_OUT  = nil
 local SELECTED_CATEGORY_TYPE = nil
 
@@ -23,7 +23,7 @@ local ToggleUI = function(display, data)
             Wait(50)
             DoScreenFadeOut(2000)
         end
-		
+
         RenderScriptCams(false, true, 500, true, true)
         SetCamActive(CameraHandler.handler, false)
         DetachCam(CameraHandler.handler)
@@ -34,6 +34,7 @@ local ToggleUI = function(display, data)
         SendNUIMessage({ type = "enable", enable = display })
 
         PlayerData.HasNUIActive = false
+        CameraHandler = { handler = nil, coords = nil, zoom = 0, z = 0 }
 
         FreezeEntityPosition(PlayerPedId(), false)
         ClearPedTasksImmediately(PlayerPedId(), true)
@@ -95,8 +96,7 @@ local function SetGroomTexture(data)
     
             modules.ApplyShopItemToPed(hash)
         else
-            local capitalizedCategoryName = TPZ.Capitalize(SELECTED_CATEGORY_TYPE)
-            RemoveTagFromMetaPed(PlayerPedId(), Config.ComponentCategories[capitalizedCategoryName])
+            RemoveTagFromMetaPed(PlayerPedId(), Config.ComponentCategories[string.lower(SELECTED_CATEGORY_TYPE)])
         end
     
         if actionType == 'texture_id' then 
@@ -172,13 +172,8 @@ local function SetGroomTexture(data)
 
         end
 
-        if _category == 'hair_overlay' then 
-            ApplyOverlay('eyebrows', PlayerSkin.eyebrows.visibility,
-            PlayerSkin.eyebrows.id, 1, 0, 0, 1.0, 0, 1, 
-            PlayerSkin.eyebrows.color, 0, 0, 1,
-            PlayerSkin.eyebrows.opacity, PlayerSkin.albedo)
-
-        end
+        print('reload')
+        ReLoadAllRequired(true, false)
 
     
     end
@@ -516,4 +511,3 @@ RegisterNUICallback('back', function()
     end) 
 
 end)
-

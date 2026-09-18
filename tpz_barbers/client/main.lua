@@ -179,11 +179,11 @@ if Config.Chairs ~= false then
         
                             if model == GetHashKey(location.Object) then
                                 DeleteObject(obj)
+							    location.EntityHandler = obj
                             end
                            
                         end
-                        
-                        location.EntityHandler = handle
+                    
     
                     end
     

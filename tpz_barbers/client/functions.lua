@@ -133,7 +133,7 @@ StartCam = function(x, y, z, rotx, roty, rotz, fov)
     local cameraHandler = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", x, y, z, rotx, roty, rotz, fov, true, 0)
 	SetCamActive(cameraHandler, true)
 	RenderScriptCams(true, true, 500, true, true)
-
+    return cameraHandler -- 1.0.3 fix
 end
 
 AdjustEntityPedHeading = function(amount)
